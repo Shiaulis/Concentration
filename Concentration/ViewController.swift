@@ -11,7 +11,7 @@ final class ViewController: UIViewController {
 
     // MARK: - Properties -
 
-    private static var emojiChoices = ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎"]
+    private static var emojiChoices = ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎", "👹"]
 
     private var emoji: Dictionary<Int, String> = [:]
     private lazy var game = Concentration(numberOfPairsOfCards: (self.cardButtons.count + 1) / 2)
