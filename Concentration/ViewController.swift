@@ -22,10 +22,17 @@ final class ViewController: UIViewController {
         }
     }
 
-    @IBOutlet private weak var flipCountLabel: UILabel!
     @IBOutlet private var cardButtons: [UIButton]!
+    @IBOutlet private weak var flipCountLabel: UILabel!
 
     // MARK: - Actions -
+
+    @IBAction func newGameTapped(_ sender: UIButton) {
+        Self.emojiChoices = ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎", "👹"]
+        self.game = Concentration(numberOfPairsOfCards: (self.cardButtons.count + 1) / 2)
+        self.flipCount = 0
+        updateViewFromModel()
+    }
 
     @IBAction private func touchCard(_ sender: UIButton) {
         self.flipCount += 1
