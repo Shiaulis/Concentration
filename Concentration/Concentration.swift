@@ -24,6 +24,8 @@ final class Concentration {
             let card = Card()
             self.cards += [card, card]
         }
+
+        self.cards.shuffle()
     }
 
     // MARK: - Public API -
