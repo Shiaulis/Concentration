@@ -14,7 +14,7 @@ final class ViewController: UIViewController {
     private static var emojiChoices = ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎", "👹"]
 
     private var emoji: Dictionary<Int, String> = [:]
-    private lazy var game = Concentration(numberOfPairsOfCards: (self.cardButtons.count + 1) / 2)
+    private lazy var game = Concentration(numberOfCards: self.cardButtons.count, theme: .allCases.randomElement() ?? .animals)
 
     private var flipCount = 0 {
         didSet {
@@ -29,7 +29,7 @@ final class ViewController: UIViewController {
 
     @IBAction func newGameTapped(_ sender: UIButton) {
         Self.emojiChoices = ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎", "👹"]
-        self.game = Concentration(numberOfPairsOfCards: (self.cardButtons.count + 1) / 2)
+        self.game = Concentration(numberOfCards: self.cardButtons.count, theme: .allCases.randomElement() ?? .animals)
         self.flipCount = 0
         updateViewFromModel()
     }
@@ -53,7 +53,7 @@ final class ViewController: UIViewController {
             let button = self.cardButtons[index]
             let card = self.game.cards[index]
             if card.isFaceUp {
-                button.setTitle(generateEmoji(for: card), for: .normal)
+                button.setTitle(self.game.generateEmoji(for: card), for: .normal)
                 button.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
             }
             else {
@@ -61,15 +61,6 @@ final class ViewController: UIViewController {
                 button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 0) : #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
             }
         }
-    }
-
-    private func generateEmoji(for card: Card) -> String {
-        if self.emoji[card.id] == nil, !Self.emojiChoices.isEmpty {
-            let randomIndex: [String].Index = .random(in: 0..<Self.emojiChoices.count)
-            self.emoji[card.id] = Self.emojiChoices.remove(at: randomIndex)
-        }
-
-        return self.emoji[card.id] ?? "?"
     }
 
 }

@@ -14,12 +14,17 @@ final class Concentration {
     // MARK: - Properties -
 
     var cards: [Card] = []
+    private var emojiChoices: [String]
+    private var emoji = [Int: String]()
 
     private var indexOfOneAndOnlyFaceUpCard: CardIndex?
 
     // MARK: - Init -
 
-    init(numberOfPairsOfCards: Int) {
+    init(numberOfCards: Int, theme: ConcentrationTheme) {
+        self.emojiChoices = theme.getEmojis()
+        let numberOfPairsOfCards = (numberOfCards + 1) / 2
+
         for _ in 1...numberOfPairsOfCards {
             let card = Card()
             self.cards += [card, card]
@@ -45,6 +50,15 @@ final class Concentration {
         }
 
         turnFaceUp(at: chosenIndex)
+    }
+
+    func generateEmoji(for card: Card) -> String {
+        if self.emoji[card.id] == nil, !self.emojiChoices.isEmpty {
+            let randomIndex: [String].Index = .random(in: 0..<self.emojiChoices.count)
+            self.emoji[card.id] = self.emojiChoices.remove(at: randomIndex)
+        }
+
+        return self.emoji[card.id] ?? "?"
     }
 
     // MARK: - Private API -
