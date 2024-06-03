@@ -13,9 +13,13 @@ final class Concentration {
 
     // MARK: - Properties -
 
-    var cards: [Card] = []
+    private (set) var cards: [Card] = []
+    private (set) var flipCount: Int = 0
+    private (set) var score: Int = 0
+
     private var emojiChoices: [String]
     private var emoji = [Int: String]()
+    private var indicesOfSeenCards: Set<CardIndex> = []
 
     private var indexOfOneAndOnlyFaceUpCard: CardIndex?
 
@@ -43,6 +47,10 @@ final class Concentration {
         if let matchIndex = self.indexOfOneAndOnlyFaceUpCard, matchIndex != chosenIndex {
             if isMatching(at: [chosenIndex, matchIndex]) {
                 markAsMatched(at: [chosenIndex, matchIndex])
+                self.score += 2
+            }
+            else {
+                penalize(at: [chosenIndex, matchIndex])
             }
         }
         else {
@@ -50,6 +58,7 @@ final class Concentration {
         }
 
         turnFaceUp(at: chosenIndex)
+        self.flipCount += 1
     }
 
     func generateEmoji(for card: Card) -> String {
@@ -89,6 +98,17 @@ final class Concentration {
 
     private func turnFaceDownAll() {
         self.cards.indices.forEach { self.cards[$0].isFaceUp = false }
+    }
+
+    private func penalize(at indices: [CardIndex]) {
+        indices.forEach {
+            if self.indicesOfSeenCards.contains($0) {
+                self.score -= 1
+            }
+            else {
+                self.indicesOfSeenCards.insert($0)
+            }
+        }
     }
 
 }

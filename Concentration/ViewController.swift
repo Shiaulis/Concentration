@@ -11,38 +11,27 @@ final class ViewController: UIViewController {
 
     // MARK: - Properties -
 
-    private static var emojiChoices = ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎", "👹"]
-
-    private var emoji: Dictionary<Int, String> = [:]
     private lazy var game = Concentration(numberOfCards: self.cardButtons.count, theme: .allCases.randomElement() ?? .animals)
-
-    private var flipCount = 0 {
-        didSet {
-            self.flipCountLabel.text = "Flips: \(self.flipCount)"
-        }
-    }
 
     @IBOutlet private var cardButtons: [UIButton]!
     @IBOutlet private weak var flipCountLabel: UILabel!
+    @IBOutlet weak var scoreLabel: UILabel!
 
     // MARK: - Actions -
 
     @IBAction func newGameTapped(_ sender: UIButton) {
         Self.emojiChoices = ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎", "👹"]
         self.game = Concentration(numberOfCards: self.cardButtons.count, theme: .allCases.randomElement() ?? .animals)
-        self.flipCount = 0
         updateViewFromModel()
     }
 
     @IBAction private func touchCard(_ sender: UIButton) {
-        self.flipCount += 1
-
         if let cardNumber = self.cardButtons.firstIndex(of: sender) {
             self.game.chooseCard(at: cardNumber)
             updateViewFromModel()
         }
         else {
-            print("chosen card was not in cardButtons")
+            assertionFailure("chosen card was not in cardButtons")
         }
     }
 
@@ -61,6 +50,9 @@ final class ViewController: UIViewController {
                 button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 0) : #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
             }
         }
+
+        self.flipCountLabel.text = "Flips: \(self.game.flipCount)"
+        self.scoreLabel.text = "Score: \(self.game.score)"
     }
 
 }
