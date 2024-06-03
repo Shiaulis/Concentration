@@ -27,7 +27,7 @@ final class ViewController: UIViewController {
 
     // MARK: - Actions -
 
-    @IBAction func touchCard(_ sender: UIButton) {
+    @IBAction private func touchCard(_ sender: UIButton) {
         self.flipCount += 1
 
         if let cardNumber = self.cardButtons.firstIndex(of: sender) {
@@ -56,7 +56,7 @@ final class ViewController: UIViewController {
         }
     }
 
-    func generateEmoji(for card: Card) -> String {
+    private func generateEmoji(for card: Card) -> String {
         if self.emoji[card.id] == nil, !Self.emojiChoices.isEmpty {
             let randomIndex: [String].Index = .random(in: 0..<Self.emojiChoices.count)
             self.emoji[card.id] = Self.emojiChoices.remove(at: randomIndex)

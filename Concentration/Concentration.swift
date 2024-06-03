@@ -19,7 +19,7 @@ final class Concentration {
 
     // MARK: - Init -
 
-    init(numberOfPairsOfCards: Int ) {
+    init(numberOfPairsOfCards: Int) {
         for _ in 1...numberOfPairsOfCards {
             let card = Card()
             self.cards += [card, card]
@@ -37,13 +37,12 @@ final class Concentration {
             if isMatching(at: [chosenIndex, matchIndex]) {
                 markAsMatched(at: [chosenIndex, matchIndex])
             }
-
-            faceUp(at: chosenIndex)
         }
         else {
-            faceDownAll()
-            faceUp(at: chosenIndex)
+            turnFaceDownAll()
         }
+
+        turnFaceUp(at: chosenIndex)
     }
 
     // MARK: - Private API -
@@ -51,7 +50,7 @@ final class Concentration {
     private func isMatching(at indices: [CardIndex]) -> Bool {
         let cards = indices.map { self.cards[$0] }
         guard let first = cards.first else {
-            return true
+            return false
         }
 
         return cards.allSatisfy { $0.id == first.id }
@@ -61,7 +60,7 @@ final class Concentration {
         indices.forEach { self.cards[$0].isMatched = true }
     }
 
-    private func faceUp(at index: CardIndex) {
+    private func turnFaceUp(at index: CardIndex) {
         self.cards[index].isFaceUp = true
 
         if self.indexOfOneAndOnlyFaceUpCard != nil {
@@ -72,7 +71,7 @@ final class Concentration {
         }
     }
 
-    private func faceDownAll() {
+    private func turnFaceDownAll() {
         self.cards.indices.forEach { self.cards[$0].isFaceUp = false }
     }
 

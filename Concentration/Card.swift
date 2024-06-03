@@ -13,7 +13,7 @@ struct Card: Identifiable {
 
     var isFaceUp = false
     var isMatched = false
-    var id: Int
+    let id: Int
 
     // MARK: - Init -
 
