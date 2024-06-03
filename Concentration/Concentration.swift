@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 final class Concentration {
 
@@ -17,6 +18,8 @@ final class Concentration {
     private (set) var flipCount: Int = 0
     private (set) var score: Int = 0
 
+    let cardBackgroundColor: UIColor
+
     private var emojiChoices: [String]
     private var emoji = [Int: String]()
     private var indicesOfSeenCards: Set<CardIndex> = []
@@ -27,6 +30,7 @@ final class Concentration {
 
     init(numberOfCards: Int, theme: ConcentrationTheme) {
         self.emojiChoices = theme.getEmojis()
+        self.cardBackgroundColor = theme.getThemeCardBackgroundColor()
         let numberOfPairsOfCards = (numberOfCards + 1) / 2
 
         for _ in 1...numberOfPairsOfCards {

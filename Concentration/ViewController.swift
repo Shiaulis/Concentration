@@ -19,9 +19,8 @@ final class ViewController: UIViewController {
 
     // MARK: - Actions -
 
-    @IBAction func newGameTapped(_ sender: UIButton) {
-        Self.emojiChoices = ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎", "👹"]
-        self.game = Concentration(numberOfCards: self.cardButtons.count, theme: .allCases.randomElement() ?? .animals)
+    @IBAction private func newGameTapped(_ sender: UIButton) {
+        self.game = Concentration(numberOfCards: self.cardButtons.count, theme: .getRandomTheme())
         updateViewFromModel()
     }
 
@@ -33,6 +32,13 @@ final class ViewController: UIViewController {
         else {
             assertionFailure("chosen card was not in cardButtons")
         }
+    }
+
+    // MARK: - Lifecycle -
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        updateViewFromModel()
     }
 
     // MARK: - Private API -
@@ -47,7 +53,7 @@ final class ViewController: UIViewController {
             }
             else {
                 button.setTitle("", for: .normal)
-                button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 0) : #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+                button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 0) : self.game.cardBackgroundColor
             }
         }
 
