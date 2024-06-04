@@ -11,32 +11,36 @@ final class ViewController: UIViewController {
 
     // MARK: - Properties -
 
-    private static var emojiChoices = ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎"]
+    private var game: Concentration!
 
-    private var emoji: Dictionary<Int, String> = [:]
-    private lazy var game = Concentration(numberOfPairsOfCards: (self.cardButtons.count + 1) / 2)
-
-    private var flipCount = 0 {
-        didSet {
-            self.flipCountLabel.text = "Flips: \(self.flipCount)"
-        }
-    }
-
-    @IBOutlet private weak var flipCountLabel: UILabel!
     @IBOutlet private var cardButtons: [UIButton]!
+    @IBOutlet private weak var flipCountLabel: UILabel!
+    @IBOutlet weak var scoreLabel: UILabel!
 
     // MARK: - Actions -
 
-    @IBAction private func touchCard(_ sender: UIButton) {
-        self.flipCount += 1
+    @IBAction private func newGameTapped(_ sender: UIButton) {
+        startNewGame()
+        updateViewFromModel()
+    }
 
+    @IBAction private func touchCard(_ sender: UIButton) {
         if let cardNumber = self.cardButtons.firstIndex(of: sender) {
             self.game.chooseCard(at: cardNumber)
             updateViewFromModel()
         }
         else {
-            print("chosen card was not in cardButtons")
+            assertionFailure("chosen card was not in cardButtons")
         }
+    }
+
+    // MARK: - Lifecycle -
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        startNewGame()
+        updateViewFromModel()
     }
 
     // MARK: - Private API -
@@ -46,23 +50,21 @@ final class ViewController: UIViewController {
             let button = self.cardButtons[index]
             let card = self.game.cards[index]
             if card.isFaceUp {
-                button.setTitle(generateEmoji(for: card), for: .normal)
+                button.setTitle(self.game.generateEmoji(for: card), for: .normal)
                 button.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
             }
             else {
                 button.setTitle("", for: .normal)
-                button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 0) : #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+                button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 0) : self.game.cardBackgroundColor
             }
         }
+
+        self.flipCountLabel.text = "Flips: \(self.game.flipCount)"
+        self.scoreLabel.text = "Score: \(self.game.score)"
     }
 
-    private func generateEmoji(for card: Card) -> String {
-        if self.emoji[card.id] == nil, !Self.emojiChoices.isEmpty {
-            let randomIndex: [String].Index = .random(in: 0..<Self.emojiChoices.count)
-            self.emoji[card.id] = Self.emojiChoices.remove(at: randomIndex)
-        }
-
-        return self.emoji[card.id] ?? "?"
+    private func startNewGame() {
+        self.game = Concentration(numberOfCards: self.cardButtons.count, theme: .getRandomTheme())
     }
 
 }
