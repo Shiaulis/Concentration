@@ -11,7 +11,7 @@ final class ViewController: UIViewController {
 
     // MARK: - Properties -
 
-    private lazy var game = Concentration(numberOfCards: self.cardButtons.count, theme: .allCases.randomElement() ?? .animals)
+    private var game: Concentration!
 
     @IBOutlet private var cardButtons: [UIButton]!
     @IBOutlet private weak var flipCountLabel: UILabel!
@@ -20,7 +20,7 @@ final class ViewController: UIViewController {
     // MARK: - Actions -
 
     @IBAction private func newGameTapped(_ sender: UIButton) {
-        self.game = Concentration(numberOfCards: self.cardButtons.count, theme: .getRandomTheme())
+        startNewGame()
         updateViewFromModel()
     }
 
@@ -38,6 +38,8 @@ final class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        startNewGame()
         updateViewFromModel()
     }
 
@@ -59,6 +61,10 @@ final class ViewController: UIViewController {
 
         self.flipCountLabel.text = "Flips: \(self.game.flipCount)"
         self.scoreLabel.text = "Score: \(self.game.score)"
+    }
+
+    private func startNewGame() {
+        self.game = Concentration(numberOfCards: self.cardButtons.count, theme: .getRandomTheme())
     }
 
 }
